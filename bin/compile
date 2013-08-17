@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+apt-get update
+apt-get -y install nginx
+
+BINDIR=$(dirname "$0")
+
+if [[ ! -f $1/nginx.conf.erb ]]; then
+        cp $BINDIR/../conf/nginx.conf.erb $1/nginx.conf.erb
+fi
+
+if [[ ! -f $1/mime.types ]]; then
+	cp $BINDIR/../conf/mime.types $1/mime.types
+fi
