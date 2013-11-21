@@ -4,5 +4,5 @@ set -e
 cat << EOF
 ---
 default_process_types:
-  web: erb $1/nginx.conf.erb > $1/nginx.conf && nginx -c /app/nginx.conf
+  web: erb /app/nginx.conf.erb > /app/nginx.conf && nginx -c /app/nginx.conf
 EOF
