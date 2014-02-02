@@ -15,5 +15,5 @@ if [[ ! -f $1/mime.types ]]; then
 fi
 
 if [[ -e $1/${CUSTOM_BUILD:-custom-build} ]]; then
-    $1/${CUSTOM_BUILD:-custom-build}
+    $1/${CUSTOM_BUILD:-custom-build} "$@"
 fi
