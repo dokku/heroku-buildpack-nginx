@@ -7,3 +7,4 @@
 * www - Folder: holds all files to be served by nginx
 * nginx.conf.erb - Optional File: overrides `conf/nginx.conf.erb`
 * mime.types - Optional File: overrides `conf/mime.types`
+* custom-build - Optional File: executes commands before build is finished
