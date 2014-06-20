@@ -12,7 +12,7 @@ http {
 	server {
 		listen <%= ENV['PORT'] %>;
 		server_name  _;
-		root /app/www;
+		root <%= ENV.fetch('root', '/app/www') %>;
 		index index.html;
 	}
 }
