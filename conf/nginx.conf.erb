@@ -2,13 +2,13 @@ worker_processes 1;
 error_log stderr;
 pid nginx.pid;
 daemon off;
-types_hash_max_size 2048;
 
 events {
 	worker_connections 768;
 }
 
 http {
+	types_hash_max_size 2048;
 	include mime.types;
 	server {
 		listen <%= ENV['PORT'] %>;
