@@ -2,7 +2,7 @@
 set -e
 
 if [[ -f $1/.nginx ]]; then
-  echo "nginx"
+  echo ".nginx"
   exit 0
 else
   exit 1
