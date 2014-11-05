@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -e 
 
+ls -la /
+ls -la /app
+
 cat << EOF
 ---
 default_process_types:
-  web: erb /app/nginx.conf.erb > /app/nginx.conf && /nginx/nginx -c /app/nginx.conf
+  web: erb /app/nginx.conf.erb > /app/nginx.conf && /app/nginx/nginx -c /app/nginx.conf
 EOF
