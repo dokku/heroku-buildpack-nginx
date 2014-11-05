@@ -13,7 +13,7 @@ BUILDDIR="${1}"
 CACHEDIR="${2}"
 
 mkdir -p $BUILDDIR/www
-mv * $BUILDDIR/www
+mv $BUILDDIR/* $BUILDDIR/www
 
 cd $CACHEDIR
 
