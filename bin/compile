@@ -82,8 +82,8 @@ make install
 
 rm -rf "nginx-${NGINX_VERSION}"
 
-if [[ ! -f $BUILDDIR/nginx.conf.erb ]]; then
-    cp $BINDIR/../conf/nginx.conf.erb $BUILDDIR/nginx.conf.erb
+if [[ ! -f $BUILDDIR/nginx.conf ]]; then
+    cp $BINDIR/../conf/nginx.conf $BUILDDIR/nginx.conf
 fi
 
 if [[ ! -f $BUILDDIR/mime.types ]]; then
