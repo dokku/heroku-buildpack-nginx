@@ -8,26 +8,40 @@ PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
 ZLIB_VERSION="1.2.8"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
+echo "0 = ${0}"
+echo "1 = ${1}"
+echo "2 = ${2}"
+
+BINDIR=$(dirname "$0")
+BUILDDIR="${1}"
+CACHEDIR="${2}"
+
+echo "BINDIR = ${BINDIR}"
+echo "BUILDDIR = ${BUILDDIR}"
+echo "CACHEDIR = ${CACHEDIR}"
+
+cd $CACHEDIR
+
 if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
-  wget "http://nginx.org/download/${NGINX_TARBALL}"
+  curl "http://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
   tar xvzf "${NGINX_TARBALL}" && rm -f "${NGINX_TARBALL}"
 fi
  
 if [[ ! -d "${PCRE_TARBALL%.tar.gz}" ]]; then
-  wget "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${PCRE_TARBALL}"
+  curl "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
   tar xvzf "${PCRE_TARBALL}" && rm -f "${PCRE_TARBALL}"
 fi
  
 if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
-  wget "http://zlib.net/${ZLIB_TARBALL}"
+  curl "http://zlib.net/${ZLIB_TARBALL}" -o "${ZLIB_TARBALL}"
   tar xvzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
 fi
 
 cd "nginx-${NGINX_VERSION}"
-mkdir ../nginx
+mkdir $BUILDDIR/nginx
 ./configure \
   --with-cpu-opt=generic \
-  --prefix=../nginx \
+  --prefix=$BUILDDIR/nginx \
   --with-pcre=../pcre-${PCRE_VERSION} \
   --sbin-path=. \
   --pid-path=./nginx.pid \
@@ -71,16 +85,10 @@ make install
 
 rm -rf "nginx-${NGINX_VERSION}"
 
-BINDIR=$(dirname "$0")
-
-if [[ ! -f $1/nginx.conf.erb ]]; then
-    cp $BINDIR/../conf/nginx.conf.erb $1/nginx.conf.erb
+if [[ ! -f $BUILDDIR/nginx.conf.erb ]]; then
+    cp $BINDIR/../conf/nginx.conf.erb $BUILDDIR/nginx.conf.erb
 fi
 
-if [[ ! -f $1/mime.types ]]; then
-	cp $BINDIR/../conf/mime.types $1/mime.types
-fi
-
-if [[ -e $1/${CUSTOM_BUILD:-custom-build} ]]; then
-    $1/${CUSTOM_BUILD:-custom-build} "$@"
+if [[ ! -f $BUILDDIR/mime.types ]]; then
+	cp $BINDIR/../conf/mime.types $BUILDDIR/mime.types
 fi
