@@ -12,8 +12,10 @@ BINDIR=$(dirname "$0")
 BUILDDIR="${1}"
 CACHEDIR="${2}"
 
+mkdir -p $CACHEDIR/www_cache
+mv $BUILDDIR/* $CACHEDIR/www_cache
 mkdir -p $BUILDDIR/www
-mv $BUILDDIR/* $BUILDDIR/www
+mv $CACHEDIR/www_cache/* $BUILDDIR/www
 
 cd $CACHEDIR
 
