@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -e 
 
-ls -la /
-ls -la /app
-
 cat << EOF
 ---
 default_process_types:
