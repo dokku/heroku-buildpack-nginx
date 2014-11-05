@@ -4,5 +4,5 @@ set -e
 cat << EOF
 ---
 default_process_types:
-  web: sh start.sh
+  web: echo 's/<PORT>/{${PORT}}/g' && sed -i 's/<PORT>/{${PORT}}/g' /app/nxinx.conf && /app/nginx/nginx -c /app/nginx.conf
 EOF
