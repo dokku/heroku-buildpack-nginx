@@ -1,13 +1,8 @@
-# NGINX Buildpack
+Dokku buildpack: Static Nginx
+================================
 
-**Note**: This has only been tested with [dokku](https://github.com/progrium/dokku) - it may not work elsewhere.
+For your static HTML site!
 
-## Structure
-* .nginx - File: its presence signals that this buildpack should be used
-* www - Folder: holds all files to be served by nginx
-* nginx.conf.erb - Optional File: overrides `conf/nginx.conf.erb`
-* mime.types - Optional File: overrides `conf/mime.types`
-* custom-build - Optional File: executes commands before build is finished. Note that this script does not run in the application root. To execute commands in the application root you must do `cd "$1"`.
+Simply use this as the Dokku buildpack for your static repo and push to your Dokku server!
 
-## Environment Variables
-* root - Optional: overrides root directory
+Make sure you have a file called `.static` in your root folder of your application.

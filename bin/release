@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-set -e 
+# bin/release <build-dir>
 
-cat << EOF
+cat <<EOF
 ---
+
+addons:
+config_vars:
+  PATH: /usr/local/bin:/usr/bin:/bin:/app/nginx
 default_process_types:
-  web: sed -i "s/<PORT>/\$PORT/g" /app/nginx.conf && /app/nginx/nginx -c /app/nginx.conf
+  web: /app/start_nginx
 EOF
