@@ -1,7 +1,17 @@
-# NGINX Buildpack
+# NGINX Buildpack for Dokku - Hosting static pages
+This buildpack has been successfully run on Digital Ocean instances of Ubuntu 14.04 (Status: Nov 2014). It might also work in different configurations.
 
-**Note**: This has only been tested with [dokku](https://github.com/progrium/dokku) - it may not work elsewhere.
+## Purpose
+`buildpack-nginx` provides a simple, low overhead way of hosting stages pages and websites on Dokku. Just add the `.env` and `.static` file to the root directory of your website as described below.
 
-Simply use this as the Dokku buildpack for your static repo and push to your Dokku server!
+## Usage
+1. Add a file with the name `.env` in the root of your directory with the following content: `export BUILDPACK_URL=https://github.com/florianheinemann/buildpack-nginx.git`
+2. Add another, *empty* file called `.static` in your root directory of your web project
+3. Push your project to Dokku
 
-Make sure you have a file called `.static` in your root folder of your application.
+All static files that you want to serve should be in the root directory of your repository. No need to use a seperate `www` folder. `buildpack-nginx` will automatically download the buildpack, download NGINX, compile it, and install it. The next time you push your project, the buildpack will reuse the precompiled binaries. 
+
+## Credits and License
+`buildpack-nginx` is licensed under the CC0 1.0 Universal license and has been informed by many similar projects on the web
+
+[Florian Heinemann](http://twitter.com/TheSumOfAll/)
