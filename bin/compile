@@ -25,6 +25,7 @@ mkdir -p $CACHE_DIR/www
 mv $BUILD_DIR/* $CACHE_DIR/www
 mkdir -p $BUILD_DIR/www
 mv $CACHE_DIR/www/* $BUILD_DIR/www
+[[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
 rm -rf $CACHE_DIR/www
 
 cd $CACHE_DIR
@@ -34,13 +35,13 @@ if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
   curl "http://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
   tar xzf "${NGINX_TARBALL}" && rm -f "${NGINX_TARBALL}"
 fi
- 
+
 if [[ ! -d "${PCRE_TARBALL%.tar.gz}" ]]; then
   echo "-----> download and unzip pcre"
   curl "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
   tar xzf "${PCRE_TARBALL}" && rm -f "${PCRE_TARBALL}"
 fi
- 
+
 if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
   echo "-----> download and unzip zlib"
   curl "http://zlib.net/${ZLIB_TARBALL}" -o "${ZLIB_TARBALL}"
@@ -89,7 +90,7 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
     --without-mail_pop3_module \
     --without-mail_imap_module \
     --without-mail_smtp_module
-   
+
   sed -i "/CFLAGS/s/ \-O //g" objs/Makefile
 
   make && make install
