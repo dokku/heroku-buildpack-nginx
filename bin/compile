@@ -7,7 +7,7 @@ set -o pipefail
 # Nginx 1.6.2
 NGINX_VERSION="1.6.2"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="8.34"
+PCRE_VERSION="8.36"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
 ZLIB_VERSION="1.2.8"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
