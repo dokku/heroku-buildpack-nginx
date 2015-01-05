@@ -19,14 +19,16 @@ CUR_DIR=`cd $(dirname $0); cd ..; pwd`
 
 mkdir -p $BUILD_DIR $CACHE_DIR
 
-echo "-----> copy static files to www"
-rm -rf $CACHE_DIR/www
-mkdir -p $CACHE_DIR/www
-mv $BUILD_DIR/* $CACHE_DIR/www
-mkdir -p $BUILD_DIR/www
-mv $CACHE_DIR/www/* $BUILD_DIR/www
-[[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
-rm -rf $CACHE_DIR/www
+if [[ ! -e "$BUILD_DIR/www" ]]; then
+  echo "-----> copy static files to www"
+  rm -rf $CACHE_DIR/www
+  mkdir -p $CACHE_DIR/www
+  mv $BUILD_DIR/* $CACHE_DIR/www
+  mkdir -p $BUILD_DIR/www
+  mv $CACHE_DIR/www/* $BUILD_DIR/www
+  [[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
+  rm -rf $CACHE_DIR/www
+fi
 
 cd $CACHE_DIR
 
