@@ -106,6 +106,12 @@ else
   cp -r $CACHE_DIR/bin/* $BUILD_DIR/nginx/
 fi
 
+# Update the PATH
+mkdir -p $BUILD_DIR/.profile.d
+cat > $BUILD_DIR/.profile.d/nginx.sh <<"EOF"
+export PATH="$PATH:$HOME/nginx"
+EOF
+
 cd $CUR_DIR
 
 # build nginx config unless overridden by user
