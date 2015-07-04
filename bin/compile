@@ -108,11 +108,17 @@ fi
 
 cd $CUR_DIR
 
-# build nginx config unless overridden by user
-#if [ ! -f $BUILD_DIR/nginx/nginx.conf ] ; then
-echo "-----> using default nginx.conf.erb"
-cp conf/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
-#fi
+
+# Test for user override on nginx config...
+if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
+  echo "-----> using user provided nginx.conf.erb"
+  cp $BUILD_DIR/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
+
+# ...else, force default file
+else
+  echo "-----> using default nginx.conf.erb"
+  cp conf/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
+fi
 
 # build mime.types unless overridden by user
 #if [ ! -f $BUILD_DIR/mime.types ] ; then
