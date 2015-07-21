@@ -26,6 +26,8 @@ if [[ ! -e "$BUILD_DIR/www" ]]; then
   mv $BUILD_DIR/* $CACHE_DIR/www
   mkdir -p $BUILD_DIR/www
   mv $CACHE_DIR/www/* $BUILD_DIR/www
+  # Check for an copy the nginx conf file override to the build dir
+  [[ -f "$BUILD_DIR/www/nginx.conf.erb" ]] && mv $BUILD_DIR/www/nginx.conf.erb $BUILD_DIR
   [[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
   rm -rf $CACHE_DIR/www
 fi
@@ -108,11 +110,18 @@ fi
 
 cd $CUR_DIR
 
-# build nginx config unless overridden by user
-#if [ ! -f $BUILD_DIR/nginx/nginx.conf ] ; then
-echo "-----> using default nginx.conf.erb"
-cp conf/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
-#fi
+
+# Test for user override on nginx config...
+if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
+  echo "-----> using user provided nginx.conf.erb"
+  cp $BUILD_DIR/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
+  rm $BUILD_DIR/nginx.conf.erb
+
+# ...else, force default file
+else
+  echo "-----> using default nginx.conf.erb"
+  cp conf/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
+fi
 
 # build mime.types unless overridden by user
 #if [ ! -f $BUILD_DIR/mime.types ] ; then
