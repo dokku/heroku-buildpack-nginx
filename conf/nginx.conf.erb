@@ -13,7 +13,11 @@ http {
   server {
     listen <%= ENV["PORT"] %>;
     server_name  _;
-    root /app/www;
+    <% if ENV["ROOT"] %>
+      root /app/www/<%= ENV["ROOT"] %>;
+    <% else %>
+      root /app/www;
+    <% end %>
     index index.html;
   }
 }
