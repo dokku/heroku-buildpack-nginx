@@ -13,8 +13,8 @@ http {
   server {
     listen <%= ENV["PORT"] %>;
     server_name  _;
-    <% if ENV["ROOT"] %>
-      root /app/www/<%= ENV["ROOT"] %>;
+    <% if ENV["NGINX_ROOT"] %>
+      root /app/www/<%= ENV["NGINX_ROOT"] %>;
     <% else %>
       root /app/www;
     <% end %>
