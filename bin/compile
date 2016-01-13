@@ -7,7 +7,7 @@ set -o pipefail
 # Nginx 1.6.2
 NGINX_VERSION="1.6.2"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="8.36"
+PCRE_VERSION="8.38"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
 ZLIB_VERSION="1.2.8"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
@@ -26,8 +26,9 @@ if [[ ! -e "$BUILD_DIR/www" ]]; then
   mv $BUILD_DIR/* $CACHE_DIR/www
   mkdir -p $BUILD_DIR/www
   mv $CACHE_DIR/www/* $BUILD_DIR/www
-  # Check for an copy the nginx conf file override to the build dir
+  # Check for a copy the nginx conf file override to the build dir
   [[ -f "$BUILD_DIR/www/nginx.conf.erb" ]] && mv $BUILD_DIR/www/nginx.conf.erb $BUILD_DIR
+  [[ -f "$BUILD_DIR/www/mime.types" ]] && mv $BUILD_DIR/www/mime.types $BUILD_DIR
   [[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
   rm -rf $CACHE_DIR/www
 fi
@@ -108,6 +109,12 @@ else
   cp -r $CACHE_DIR/bin/* $BUILD_DIR/nginx/
 fi
 
+# Update the PATH
+mkdir -p $BUILD_DIR/.profile.d
+cat > $BUILD_DIR/.profile.d/nginx.sh <<"EOF"
+export PATH="$PATH:$HOME/nginx"
+EOF
+
 cd $CUR_DIR
 
 
@@ -115,7 +122,7 @@ cd $CUR_DIR
 if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
   echo "-----> using user provided nginx.conf.erb"
   cp $BUILD_DIR/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
-  rm $BUILD_DIR/nginx.conf.erb
+  #rm $BUILD_DIR/nginx.conf.erb
 
 # ...else, force default file
 else
@@ -124,16 +131,21 @@ else
 fi
 
 # build mime.types unless overridden by user
-#if [ ! -f $BUILD_DIR/mime.types ] ; then
-echo "-----> using default mime.types"
-cp conf/mime.types $BUILD_DIR/nginx/mime.types
-#fi
+if [ -f $BUILD_DIR/mime.types ] ; then
+  echo "-----> using user provided mime.types"
+  cp $BUILD_DIR/mime.types $BUILD_DIR/nginx/mime.types
+
+else
+  echo "-----> using default mime.types"
+  cp conf/mime.types $BUILD_DIR/nginx/mime.types
+fi
+
 
 # build a startup script
 cat <<EOF >"$BUILD_DIR/start_nginx"
 #!/usr/bin/env bash
 rm -f /app/nginx/nginx.conf
 erb /app/nginx/nginx.conf.erb > /app/nginx/nginx.conf
-exec nginx -p /app/nginx -c /app/nginx/nginx.conf
+exec /app/nginx/nginx -p /app/nginx -c /app/nginx/nginx.conf
 EOF
 chmod +x "$BUILD_DIR/start_nginx"
