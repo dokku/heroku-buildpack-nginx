@@ -125,7 +125,7 @@ if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
 
 # Dokku 0.5.0+ uses nginx.conf.sigil for customizing the
 # Nginx configuration, so let's check if it exists
-if [ -f $BUILD_DIR/nginx.conf.sigil ] ; then
+elif [ -f $BUILD_DIR/nginx.conf.sigil ] ; then
   echo "-----> using user provided nginx.conf.sigil"
   cp $BUILD_DIR/nginx.conf.sigil $BUILD_DIR/nginx/nginx.conf.sigil
 
