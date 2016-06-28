@@ -19,5 +19,9 @@ http {
       root /app/www;
     <% end %>
     index index.html;
+    
+    location / {
+      try_files $uri $uri/ /index.html;
+    }
   }
 }
