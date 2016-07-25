@@ -4,10 +4,9 @@
 set -e
 set -o pipefail
 
-# Nginx 1.8.1
-NGINX_VERSION="1.8.1"
+NGINX_VERSION="1.10.1"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="8.38"
+PCRE_VERSION="8.39"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
 SIGIL_VERSION="0.4.0"
 SIGIL_TARBALL="sigil_${SIGIL_VERSION}_Linux_x86_64.tgz"
