@@ -78,7 +78,6 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
     --pid-path=./nginx.pid \
     --conf-path=./nginx.conf \
     --with-ld-opt="-static" \
-    --with-http_spdy_module \
     --with-http_stub_status_module \
     --with-http_gzip_static_module \
     --with-file-aio \
