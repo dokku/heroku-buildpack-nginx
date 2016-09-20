@@ -133,6 +133,7 @@ cd $CUR_DIR
 if [ -f $BUILD_DIR/app-nginx.conf.sigil ] ; then
   echo "-----> using user provided app-nginx.conf.sigil"
   cp $BUILD_DIR/app-nginx.conf.sigil $BUILD_DIR/nginx/nginx.conf.sigil
+fi
 
 # Allow deprecated nginx.conf.erb
 if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
