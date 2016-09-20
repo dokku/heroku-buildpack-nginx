@@ -141,7 +141,7 @@ cd "$CUR_DIR"
 # Add support for app-nginx.conf.sigil
 if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] ; then
   echo "-----> Using user provided app-nginx.conf.sigil"
-  cp "$BUILD_DIR/app-nginx.conf.sigil" "$BUILD_DIR/nginx/nginx.conf.sigil"
+  cp "$BUILD_DIR/app-nginx.conf.sigil" "$BUILD_DIR/nginx/app-nginx.conf.sigil"
 fi
 
 # Allow deprecated nginx.conf.erb
@@ -151,8 +151,8 @@ if [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
 
 # ...else, force default file
 else
-  echo "-----> Using default nginx.conf.sigil"
-  cp conf/nginx.conf.sigil "$BUILD_DIR/nginx/nginx.conf.sigil"
+  echo "-----> Using default app-nginx.conf.sigil"
+  cp conf/app-nginx.conf.sigil "$BUILD_DIR/nginx/app-nginx.conf.sigil"
 fi
 
 # build mime.types unless overridden by user
@@ -169,8 +169,8 @@ fi
 cat <<EOF >"$BUILD_DIR/start_nginx"
 #!/usr/bin/env bash
 rm -f /app/nginx/nginx.conf
-if [[ -f /app/nginx/nginx.conf.sigil ]]; then
-  /app/sigil/sigil -f /app/nginx/nginx.conf.sigil NGINX_ROOT="\$NGINX_ROOT" PORT="\$PORT" | cat -s > /app/nginx/nginx.conf
+if [[ -f /app/nginx/app-nginx.conf.sigil ]]; then
+  /app/sigil/sigil -f /app/nginx/app-nginx.conf.sigil NGINX_ROOT="\$NGINX_ROOT" PORT="\$PORT" | cat -s > /app/nginx/nginx.conf
 else
   erb /app/nginx/nginx.conf.erb > /app/nginx/nginx.conf
 fi

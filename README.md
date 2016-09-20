@@ -25,7 +25,7 @@ heroku buildpacks:set https://github.com/dokku/buildpack-nginx.git
 
 You can override the nginx root via setting the `NGINX_ROOT` environment variable. This should be a relative path in your repository.
 
-You may completely override the built-in nginx config by placing an `nginx.conf.sigil` file in the root, modeled after our own [`conf/nginx.config.sigil`](https://github.com/dokku/buildpack-nginx/blob/master/conf/nginx.conf.sigil). This will be used inside of the container, and not by the host Dokku instance. See the [sigil project](https://github.com/gliderlabs/sigil) for more information concerning the sigil format.
+You may completely override the built-in nginx config by placing an `app-nginx.conf.sigil` file in the root, modeled after our own [`conf/app-nginx.conf.sigil`](https://github.com/dokku/buildpack-nginx/blob/master/conf/app-nginx.conf.sigil). This will be used inside of the container, and not by the host Dokku instance. See the [sigil project](https://github.com/gliderlabs/sigil) for more information concerning the sigil format.
 
 ## Credits and License
 
