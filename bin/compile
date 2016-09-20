@@ -9,6 +9,8 @@ NGINX_VERSION="1.8.1"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
 PCRE_VERSION="8.38"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
+SIGIL_VERSION="0.4.0"
+SIGIL_TARBALL="sigil_${SIGIL_VERSION}_Linux_x86_64.tgz"
 ZLIB_VERSION="1.2.8"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
@@ -54,6 +56,15 @@ if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
   curl "http://zlib.net/${ZLIB_TARBALL}" -o "${ZLIB_TARBALL}"
   tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
 fi
+
+if [[ ! -f "sigil" ]]; then
+  echo "-----> download and unzip sigil"
+  curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/${SIGIL_TARBALL}" -o "${SIGIL_TARBALL}"
+  tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
+fi
+
+mkdir -p $BUILD_DIR/sigil
+cp -r sigil $BUILD_DIR/sigil/
 
 cd "nginx-${NGINX_VERSION}"
 if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
