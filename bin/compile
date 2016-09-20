@@ -13,6 +13,10 @@ SIGIL_TARBALL="sigil_${SIGIL_VERSION}_Linux_x86_64.tgz"
 ZLIB_VERSION="1.2.8"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
+suppress() {
+  /bin/rm --force /tmp/surpress.out 2> /dev/null; $* 2>&1 > /tmp/surpress.out || cat /tmp/surpress.out; /bin/rm /tmp/surpress.out;
+}
+
 # parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -114,7 +118,7 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
 
   sed -i "/CFLAGS/s/ \-O //g" objs/Makefile
 
-  make && make install
+  suppress make && suppress make install
 
   rm -rf "${CACHE_DIR:?}/bin" && mkdir -p "$CACHE_DIR/bin/"
   # shellcheck disable=SC2086
