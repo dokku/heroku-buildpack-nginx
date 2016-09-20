@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir> <cache-dir>
-set -e
+set -eo pipefail; [[ $TRACE ]] && set -x
 
 # Exit early if app is clearly not an nginx app
 if [[ ! -f $1/.static ]]; then

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
-
-set -e
-set -o pipefail
+set -eo pipefail; [[ $TRACE ]] && set -x
 
 NGINX_VERSION="1.10.1"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"

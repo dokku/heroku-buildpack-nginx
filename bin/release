@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # bin/release <build-dir>
+set -eo pipefail; [[ $TRACE ]] && set -x
 
 cat <<EOF
 ---
