@@ -12,7 +12,8 @@ ZLIB_VERSION="1.2.8"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
 suppress() {
-  /bin/rm --force /tmp/surpress.out 2> /dev/null; $* 2>&1 > /tmp/surpress.out || cat /tmp/surpress.out; /bin/rm /tmp/surpress.out;
+  # shellcheck disable=SC2069
+  /bin/rm --force /tmp/surpress.out 2> /dev/null; "$@" 2>&1 > /tmp/surpress.out || cat /tmp/surpress.out; /bin/rm /tmp/surpress.out;
 }
 
 # parse and derive params

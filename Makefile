@@ -12,7 +12,7 @@ ci-dependencies: shellcheck
 
 lint:
 	@echo linting...
-	@$(QUIET) find ./ -maxdepth 2 -not -path '*/\.*' | xargs file | egrep "shell|bash" | awk '{ print $$1 }' | sed 's/://g' | xargs shellcheck
+	@$(QUIET) find ./ -maxdepth 2 -not -path '*/\.*' | xargs file | egrep "shell|bash" | awk '{ print $$1 }' | sed 's/://g' | xargs shellcheck -e SC2069
 
 setup:
 	$(MAKE) ci-dependencies
