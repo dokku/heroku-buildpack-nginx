@@ -16,28 +16,32 @@ ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 # parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
-CUR_DIR=`cd $(dirname $0); cd ..; pwd`
+CUR_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
-mkdir -p $BUILD_DIR $CACHE_DIR
+mkdir -p "$BUILD_DIR" "$CACHE_DIR"
 
-if [[ ! -e "$BUILD_DIR/www" ]]; then
+if [[ ! -e "${BUILD_DIR}/www" ]]; then
   echo "-----> copy static files to www"
-  rm -rf $CACHE_DIR/www
-  mkdir -p $CACHE_DIR/www
-  mv $BUILD_DIR/* $CACHE_DIR/www
-  mkdir -p $BUILD_DIR/www
-  mv $CACHE_DIR/www/* $BUILD_DIR/www
+  rm -rf "${CACHE_DIR}/www"
+  mkdir -p "${CACHE_DIR}/www"
+
+  # shellcheck disable=SC2086
+  mv $BUILD_DIR/* "${CACHE_DIR}/www"
+  mkdir -p "${BUILD_DIR}/www"
+
+  # shellcheck disable=SC2086
+  mv ${CACHE_DIR}/www/* "${BUILD_DIR}/www"
   # Check for a copy the nginx conf file override to the build dir
-  [[ -f "$BUILD_DIR/www/nginx.conf.erb" ]] && mv $BUILD_DIR/www/nginx.conf.erb $BUILD_DIR
-  [[ -f "$BUILD_DIR/www/nginx.conf.sigil" ]] && mv $BUILD_DIR/www/nginx.conf.sigil $BUILD_DIR
-  [[ -f "$BUILD_DIR/www/app-nginx.conf.sigil" ]] && mv $BUILD_DIR/www/app-nginx.conf.sigil $BUILD_DIR
-  [[ -f "$BUILD_DIR/www/mime.types" ]] && mv $BUILD_DIR/www/mime.types $BUILD_DIR
-  [[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
-  [[ -f "$BUILD_DIR/www/app.json" ]] && mv $BUILD_DIR/www/app.json $BUILD_DIR
-  rm -rf $CACHE_DIR/www
+  [[ -f "${BUILD_DIR}/www/nginx.conf.erb" ]] && mv "${BUILD_DIR}/www/nginx.conf.erb" "${BUILD_DIR}"
+  [[ -f "${BUILD_DIR}/www/nginx.conf.sigil" ]] && mv "${BUILD_DIR}/www/nginx.conf.sigil" "${BUILD_DIR}"
+  [[ -f "${BUILD_DIR}/www/app-nginx.conf.sigil" ]] && mv "${BUILD_DIR}/www/app-nginx.conf.sigil" "${BUILD_DIR}"
+  [[ -f "${BUILD_DIR}/www/mime.types" ]] && mv "${BUILD_DIR}/www/mime.types" "${BUILD_DIR}"
+  [[ -f "${BUILD_DIR}/www/CHECKS" ]] && mv "${BUILD_DIR}/www/CHECKS" "${BUILD_DIR}"
+  [[ -f "${BUILD_DIR}/www/app.json" ]] && mv "${BUILD_DIR}/www/app.json" "${BUILD_DIR}"
+  rm -rf "${CACHE_DIR}/www"
 fi
 
-cd $CACHE_DIR
+cd "$CACHE_DIR"
 
 if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
   echo "-----> download and unzip nginx"
@@ -63,16 +67,16 @@ if [[ ! -f "sigil" ]]; then
   tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
 fi
 
-mkdir -p $BUILD_DIR/sigil
-cp -r sigil $BUILD_DIR/sigil/
+mkdir -p "$BUILD_DIR/sigil"
+cp -r sigil "$BUILD_DIR/sigil/"
 
 cd "nginx-${NGINX_VERSION}"
 if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
   echo "-----> compile static nginx"
-  mkdir $BUILD_DIR/nginx
+  mkdir "$BUILD_DIR/nginx"
   ./configure \
     --with-cpu-opt=generic \
-    --prefix=$BUILD_DIR/nginx \
+    --prefix="$BUILD_DIR/nginx" \
     --with-pcre=../pcre-${PCRE_VERSION} \
     --sbin-path=. \
     --pid-path=./nginx.pid \
@@ -112,48 +116,50 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
 
   make && make install
 
-  rm -rf $CACHE_DIR/bin && mkdir -p $CACHE_DIR/bin/
-  cp -r $BUILD_DIR/nginx/* $CACHE_DIR/bin/
+  rm -rf "${CACHE_DIR:?}/bin" && mkdir -p "$CACHE_DIR/bin/"
+  # shellcheck disable=SC2086
+  cp -r $BUILD_DIR/nginx/* "$CACHE_DIR/bin/"
 
 else
   echo "-----> reuse nginx from cache"
-  mkdir -p $BUILD_DIR/nginx
-  cp -r $CACHE_DIR/bin/* $BUILD_DIR/nginx/
+  mkdir -p "$BUILD_DIR/nginx"
+  # shellcheck disable=SC2086
+  cp -r $CACHE_DIR/bin/* "$BUILD_DIR/nginx/"
 fi
 
 # Update the PATH
-mkdir -p $BUILD_DIR/.profile.d
-cat > $BUILD_DIR/.profile.d/nginx.sh <<"EOF"
+mkdir -p "$BUILD_DIR/.profile.d"
+cat > "$BUILD_DIR/.profile.d/nginx.sh" <<"EOF"
 export PATH="$PATH:$HOME/nginx"
 EOF
 
-cd $CUR_DIR
+cd "$CUR_DIR"
 
 # Add support for app-nginx.conf.sigil
-if [ -f $BUILD_DIR/app-nginx.conf.sigil ] ; then
+if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] ; then
   echo "-----> using user provided app-nginx.conf.sigil"
-  cp $BUILD_DIR/app-nginx.conf.sigil $BUILD_DIR/nginx/nginx.conf.sigil
+  cp "$BUILD_DIR/app-nginx.conf.sigil" "$BUILD_DIR/nginx/nginx.conf.sigil"
 fi
 
 # Allow deprecated nginx.conf.erb
-if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
+if [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
   echo "----->  DEPRECATED: using user provided nginx.conf.erb"
-  cp $BUILD_DIR/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
+  cp "$BUILD_DIR/nginx.conf.erb" "$BUILD_DIR/nginx/nginx.conf.erb"
 
 # ...else, force default file
 else
   echo "-----> using default nginx.conf.sigil"
-  cp conf/nginx.conf.sigil $BUILD_DIR/nginx/nginx.conf.sigil
+  cp conf/nginx.conf.sigil "$BUILD_DIR/nginx/nginx.conf.sigil"
 fi
 
 # build mime.types unless overridden by user
-if [ -f $BUILD_DIR/mime.types ] ; then
+if [ -f "$BUILD_DIR/mime.types" ] ; then
   echo "-----> using user provided mime.types"
-  cp $BUILD_DIR/mime.types $BUILD_DIR/nginx/mime.types
+  cp "$BUILD_DIR/mime.types" "$BUILD_DIR/nginx/mime.types"
 
 else
   echo "-----> using default mime.types"
-  cp conf/mime.types $BUILD_DIR/nginx/mime.types
+  cp conf/mime.types "$BUILD_DIR/nginx/mime.types"
 fi
 
 # build a startup script
