@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+# bin/detect <build-dir> <cache-dir>
 set -e
 
-if [[ -f $1/.static ]]; then
-  echo ".static"
-  exit 0
-else
+# Exit early if app is clearly not an nginx app
+if [[ ! -f $1/.static ]]; then
   exit 1
 fi
+
+echo ".static"
