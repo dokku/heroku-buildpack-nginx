@@ -31,6 +31,7 @@ if [[ ! -e "$BUILD_DIR/www" ]]; then
   # Check for a copy the nginx conf file override to the build dir
   [[ -f "$BUILD_DIR/www/nginx.conf.erb" ]] && mv $BUILD_DIR/www/nginx.conf.erb $BUILD_DIR
   [[ -f "$BUILD_DIR/www/nginx.conf.sigil" ]] && mv $BUILD_DIR/www/nginx.conf.sigil $BUILD_DIR
+  [[ -f "$BUILD_DIR/www/app-nginx.conf.sigil" ]] && mv $BUILD_DIR/www/app-nginx.conf.sigil $BUILD_DIR
   [[ -f "$BUILD_DIR/www/mime.types" ]] && mv $BUILD_DIR/www/mime.types $BUILD_DIR
   [[ -f "$BUILD_DIR/www/CHECKS" ]] && mv $BUILD_DIR/www/CHECKS $BUILD_DIR
   [[ -f "$BUILD_DIR/www/app.json" ]] && mv $BUILD_DIR/www/app.json $BUILD_DIR
@@ -130,16 +131,20 @@ EOF
 
 cd $CUR_DIR
 
+# Add support for app-nginx.conf.sigil
+if [ -f $BUILD_DIR/app-nginx.conf.sigil ] ; then
+  echo "-----> using user provided app-nginx.conf.sigil"
+  cp $BUILD_DIR/app-nginx.conf.sigil $BUILD_DIR/nginx/nginx.conf.sigil
 
-# Test for user override on nginx config...
+# Allow deprecated nginx.conf.erb
 if [ -f $BUILD_DIR/nginx.conf.erb ] ; then
-  echo "-----> using user provided nginx.conf.erb"
+  echo "----->  DEPRECATED: using user provided nginx.conf.erb"
   cp $BUILD_DIR/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
 
 # ...else, force default file
 else
-  echo "-----> using default nginx.conf.erb"
-  cp conf/nginx.conf.erb $BUILD_DIR/nginx/nginx.conf.erb
+  echo "-----> using default nginx.conf.sigil"
+  cp conf/nginx.conf.sigil $BUILD_DIR/nginx/nginx.conf.sigil
 fi
 
 # build mime.types unless overridden by user
@@ -152,12 +157,15 @@ else
   cp conf/mime.types $BUILD_DIR/nginx/mime.types
 fi
 
-
 # build a startup script
 cat <<EOF >"$BUILD_DIR/start_nginx"
 #!/usr/bin/env bash
 rm -f /app/nginx/nginx.conf
-erb /app/nginx/nginx.conf.erb > /app/nginx/nginx.conf
+if [[ -f /app/nginx/nginx.conf.sigil ]]; then
+  /app/sigil/sigil -f /app/nginx/nginx.conf.sigil NGINX_ROOT="\$NGINX_ROOT" PORT="\$PORT" | cat -s > /app/nginx/nginx.conf
+else
+  erb /app/nginx/nginx.conf.erb > /app/nginx/nginx.conf
+fi
 exec /app/nginx/nginx -p /app/nginx -c /app/nginx/nginx.conf
 EOF
 chmod +x "$BUILD_DIR/start_nginx"

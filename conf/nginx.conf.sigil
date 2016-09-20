@@ -11,13 +11,13 @@ http {
   types_hash_max_size 2048;
   include mime.types;
   server {
-    listen <%= ENV["PORT"] %>;
+    listen {{ $.PORT }};
     server_name  _;
-    <% if ENV["NGINX_ROOT"] %>
-      root /app/www/<%= ENV["NGINX_ROOT"] %>;
-    <% else %>
+    {{ if ne $.NGINX_ROOT "" }}
+      root /app/www/{{ $.NGINX_ROOT }};
+    {{ else }}
       root /app/www;
-    <% end %>
+    {{ end }}
     index index.html;
 
     location / {
