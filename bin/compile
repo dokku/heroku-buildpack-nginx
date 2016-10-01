@@ -138,17 +138,20 @@ EOF
 
 cd "$CUR_DIR"
 
-# Add support for app-nginx.conf.sigil
-if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] ; then
-  echo "-----> Using user provided app-nginx.conf.sigil"
-  cp "$BUILD_DIR/app-nginx.conf.sigil" "$BUILD_DIR/nginx/app-nginx.conf.sigil"
-fi
+# Check for user provided nginx conf
+if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] || [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
 
-# Allow deprecated nginx.conf.erb
-if [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
-  echo "-----> DEPRECATED: using user provided nginx.conf.erb"
-  cp "$BUILD_DIR/nginx.conf.erb" "$BUILD_DIR/nginx/nginx.conf.erb"
+  # Add support for app-nginx.conf.sigil
+  if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] ; then
+    echo "-----> Using user provided app-nginx.conf.sigil"
+    cp "$BUILD_DIR/app-nginx.conf.sigil" "$BUILD_DIR/nginx/app-nginx.conf.sigil"
+  fi
 
+  # Allow deprecated nginx.conf.erb
+  if [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
+    echo "-----> DEPRECATED: using user provided nginx.conf.erb"
+    cp "$BUILD_DIR/nginx.conf.erb" "$BUILD_DIR/nginx/nginx.conf.erb"
+  fi
 # ...else, force default file
 else
   echo "-----> Using default app-nginx.conf.sigil"
