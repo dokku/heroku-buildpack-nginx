@@ -8,7 +8,7 @@ PCRE_VERSION="8.39"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
 SIGIL_VERSION="0.4.0"
 SIGIL_TARBALL="sigil_${SIGIL_VERSION}_Linux_x86_64.tgz"
-ZLIB_VERSION="1.2.8"
+ZLIB_VERSION="1.2.9"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
 suppress() {
@@ -60,7 +60,7 @@ fi
 
 if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
   echo "-----> Download and unzip zlib"
-  curl -sSL "http://zlib.net/${ZLIB_TARBALL}" -o "${ZLIB_TARBALL}"
+  curl -sSL "https://github.com/madler/zlib/archive/v${ZLIB_VERSION}.tar.gz" -o "${ZLIB_TARBALL}"
   tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
 fi
 
