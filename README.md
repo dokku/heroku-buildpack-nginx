@@ -11,7 +11,9 @@ All static files that you want to serve should be in the root directory of your 
 To trigger detection of this buildpack in Dokku, you have two options:
 
 - Automatic: Add an *empty* file called `.static` to your root directory of your web project.
-- Manual: Set your `BUILDPACK_URL` via `dokku config:set BUILDPACK_URL=https://github.com/dokku/buildpack-nginx.git`
+- Manual: Set your `BUILDPACK_URL` via `dokku config:set $APP_NAME BUILDPACK_URL=https://github.com/dokku/buildpack-nginx.git`
+
+Where `$APP_NAME` is your application's name.
 
 ### Heroku
 
