@@ -8,10 +8,9 @@ All static files that you want to serve should be in the root directory of your 
 
 ### Dokku
 
-To trigger detection of this buildpack in Dokku, you have two options:
+To trigger detection of this buildpack you need to add a dotfile:
 
-- Automatic: Add an *empty* file called `.static` to your root directory of your web project.
-- Manual: Set your `BUILDPACK_URL` via `dokku config:set $APP_NAME BUILDPACK_URL=https://github.com/dokku/buildpack-nginx.git`
+Add an *empty* file called `.static` to your root directory of your web project (regardless if you use a custom value for NGINX_ROOT)
 
 Where `$APP_NAME` is your application's name.
 
