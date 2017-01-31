@@ -7,9 +7,9 @@ set -o pipefail
 # Nginx 1.8.1
 NGINX_VERSION="1.8.1"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="8.38"
+PCRE_VERSION="8.40"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
-ZLIB_VERSION="1.2.10"
+ZLIB_VERSION="1.2.11"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
 # parse and derive params
