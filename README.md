@@ -12,8 +12,6 @@ To trigger detection of this buildpack you need to add a dotfile:
 
 Add an *empty* file called `.static` to your root directory of your web project (regardless if you use a custom value for NGINX_ROOT)
 
-Where `$APP_NAME` is your application's name.
-
 ### Heroku
 
 Heroku users can use this buildpack by running the following command:
