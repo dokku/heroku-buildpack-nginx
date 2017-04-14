@@ -19,6 +19,7 @@ http {
       root /app/www;
     {{ end }}
     index index.html;
+    port_in_redirect off;
 
     location / {
       try_files $uri $uri/ /index.html;
