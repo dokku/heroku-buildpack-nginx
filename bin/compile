@@ -2,7 +2,7 @@
 # bin/compile <build-dir> <cache-dir>
 set -eo pipefail; [[ $TRACE ]] && set -x
 
-NGINX_VERSION="1.10.1"
+NGINX_VERSION="1.14.0"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
 PCRE_VERSION="8.40"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
