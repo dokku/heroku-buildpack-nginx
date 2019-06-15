@@ -2,9 +2,9 @@
 # bin/compile <build-dir> <cache-dir>
 set -eo pipefail; [[ $TRACE ]] && set -x
 
-NGINX_VERSION="1.14.0"
+NGINX_VERSION="1.17.0"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="8.40"
+PCRE_VERSION="8.43"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
 SIGIL_VERSION="0.4.0"
 SIGIL_TARBALL="sigil_${SIGIL_VERSION}_Linux_x86_64.tgz"
@@ -47,25 +47,25 @@ fi
 cd "$CACHE_DIR"
 
 if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
-  echo "-----> Download and unzip nginx"
+  echo "-----> Download and unzip nginx ${NGINX_VERSION} via http"
   curl -sSL "http://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
   tar xzf "${NGINX_TARBALL}" && rm -f "${NGINX_TARBALL}"
 fi
 
 if [[ ! -d "${PCRE_TARBALL%.tar.gz}" ]]; then
-  echo "-----> Download and unzip pcre"
-  curl -sSL "https://ftp.pcre.org/pub/pcre/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
+  echo "-----> Download and unzip pcre ${PCRE_VERSION} via ftp"
+  curl -sSL "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
   tar xzf "${PCRE_TARBALL}" && rm -f "${PCRE_TARBALL}"
 fi
 
 if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
-  echo "-----> Download and unzip zlib"
+  echo "-----> Download and unzip zlib ${ZLIB_VERSION} via http"
   curl -sSL "https://github.com/madler/zlib/archive/v${ZLIB_VERSION}.tar.gz" -o "${ZLIB_TARBALL}"
   tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
 fi
 
 if [[ ! -f "sigil" ]]; then
-  echo "-----> Download and unzip sigil"
+  echo "-----> Download and unzip sigil ${SIGIL_VERSION} via http"
   curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/${SIGIL_TARBALL}" -o "${SIGIL_TARBALL}"
   tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
 fi
