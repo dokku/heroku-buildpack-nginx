@@ -10,6 +10,7 @@ events {
 http {
   types_hash_max_size 2048;
   include mime.types;
+  charset UTF-8;
   server {
     listen {{ $.PORT }};
     server_name  _;
