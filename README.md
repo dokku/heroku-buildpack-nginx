@@ -1,4 +1,4 @@
-# Dokku Buildpack: nginx
+# heroku-buildpack-nginx
 
 This is the official dokku buildpack for static websites, powered by nginx.
 
