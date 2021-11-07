@@ -54,7 +54,7 @@ fi
 
 if [[ ! -d "${PCRE_TARBALL%.tar.gz}" ]]; then
   echo "-----> Download and unzip pcre ${PCRE_VERSION} via http"
-  curl -sSL "https://downloads.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/${PCRE_TARBALL} -o "${PCRE_TARBALL}"
+  curl -sSL "https://downloads.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
   tar xzf "${PCRE_TARBALL}" && rm -f "${PCRE_TARBALL}"
 fi
 
