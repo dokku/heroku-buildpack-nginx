@@ -32,6 +32,16 @@ You can override the nginx root via setting the `NGINX_ROOT` environment variabl
 dokku config:set static-app NGINX_ROOT=_site
 ````
 
+### Default to index for history routing
+
+By default, this buildpack will 404 if a requested file is not found. For static sites that use the browser's history router to show the correct context, setting the `NGINX_DEFAULT_REQUEST` to a specific file will override this.
+
+```shell
+# where the app is named `static-app`
+# and the desired default response is index.html
+dokku config:set static-app NGINX_ROOT=index.html
+```
+
 ### Custom nginx config file
 
 You may completely override the built-in nginx config by placing an `app-nginx.conf.sigil` file in the root, modeled after our own [`conf/app-nginx.conf.sigil`](https://github.com/dokku/buildpack-nginx/blob/master/conf/app-nginx.conf.sigil). This will be used inside of the container, and not by the host Dokku instance. See the [sigil project](https://github.com/gliderlabs/sigil) for more information concerning the sigil format.

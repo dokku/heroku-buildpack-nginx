@@ -143,7 +143,7 @@ if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] ; then
 
 # Allow deprecated nginx.conf.erb
 elif [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
-  echo "-----> DEPRECATED: using user provided nginx.conf.erb"
+  echo "-----> DEPRECATED: Using user provided nginx.conf.erb"
   cp "$BUILD_DIR/nginx.conf.erb" "$BUILD_DIR/nginx/nginx.conf.erb"
 
 # ...else, force default file
@@ -167,7 +167,7 @@ cat <<EOF >"$BUILD_DIR/start_nginx"
 #!/usr/bin/env bash
 rm -f /app/nginx/nginx.conf
 if [[ -f /app/nginx/app-nginx.conf.sigil ]]; then
-  /app/sigil/sigil -f /app/nginx/app-nginx.conf.sigil NGINX_ROOT="\$NGINX_ROOT" PORT="\$PORT" | cat -s > /app/nginx/nginx.conf
+  /app/sigil/sigil -f /app/nginx/app-nginx.conf.sigil NGINX_ROOT="\$NGINX_ROOT" NGINX_DEFAULT_REQUEST="\$NGINX_DEFAULT_REQUEST" PORT="\$PORT" | cat -s > /app/nginx/nginx.conf
 else
   erb /app/nginx/nginx.conf.erb > /app/nginx/nginx.conf
 fi
