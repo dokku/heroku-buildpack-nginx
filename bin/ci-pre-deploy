@@ -1,5 +1,4 @@
 #!/bin/sh -l
-ls -lah
 if [ "$IS_REVIEW_APP" = "true" ]; then
   echo "purging repo cache"
   ssh "$SSH_REMOTE" -- repo:purge-cache "$APP_NAME"
@@ -8,5 +7,5 @@ if [ "$IS_REVIEW_APP" = "true" ]; then
   git add .buildpacks
   git config --global user.name 'Dokku Bot'
   git config --global user.email no-reply@dokku.com
-  git commit -m "feat: specify $GITHUB_SHA as buildpack"
+  git commit -qm "feat: specify $GITHUB_SHA as buildpack"
 fi
