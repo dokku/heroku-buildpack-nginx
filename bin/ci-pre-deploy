@@ -1,6 +1,9 @@
 #!/bin/sh -l
 ls -lah
 if [ "$IS_REVIEW_APP" = "true" ]; then
+  echo "purging repo cache"
+  ssh "$SSH_REMOTE" -- repo:purge-cache "$APP_NAME"
+
   echo "https://github.com/${GITHUB_REPOSITORY}.git#$GITHUB_SHA" > .buildpacks
   git add .buildpacks
   git config --global user.name 'Dokku Bot'
