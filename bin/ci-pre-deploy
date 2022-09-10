@@ -1,4 +1,5 @@
 #!/bin/sh -l
+ls -lah
 if [ "$IS_REVIEW_APP" = "true" ]; then
   echo "https://github.com/${GITHUB_REPOSITORY}.git#$GITHUB_SHA" > .buildpacks
   git add .buildpacks
