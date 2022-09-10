@@ -87,6 +87,7 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
     --with-ld-opt="-static" \
     --with-http_stub_status_module \
     --with-http_gzip_static_module \
+    --with-http_ssl_module \
     --with-file-aio \
     --with-zlib=../zlib-${ZLIB_VERSION} \
     --with-pcre \
