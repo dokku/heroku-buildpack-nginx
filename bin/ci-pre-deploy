@@ -3,6 +3,9 @@ if [ "$IS_REVIEW_APP" = "true" ]; then
   echo "-----> Purging repo cache"
   ssh "$SSH_REMOTE" -- repo:purge-cache "$APP_NAME"
 
+  echo "-----> Setting the test domain name"
+  ssh "$SSH_REMOTE" -- repo:purge-cache "$APP_NAME" "$APP_NAME.dokku.net"
+
   echo "-----> Setting the buildpack to the current commit"
   echo "https://github.com/${GITHUB_REPOSITORY}.git#$GITHUB_SHA" > .buildpacks
   git add .buildpacks
