@@ -1,15 +1,26 @@
 #!/bin/sh -l
 if [ "$IS_REVIEW_APP" = "true" ]; then
+  git config --global user.name 'Dokku Bot'
+  git config --global user.email no-reply@dokku.com
+
   echo "-----> Purging repo cache"
   ssh "$SSH_REMOTE" -- repo:purge-cache "$APP_NAME"
 
   echo "-----> Setting the test domain name"
   ssh "$SSH_REMOTE" -- domains:set "$APP_NAME" "$APP_NAME.dokku.net"
 
+  echo "-----> Ensure test includes vendored app-nginx.conf.sigil"
+  cp conf/app-nginx.conf.sigil app-nginx.conf.sigil
+  git add app-nginx.conf.sigil
+  git commit -qm "feat: specify custom app-nginx.conf.sigil"
+
+  echo "-----> Ensure test includes vendored mime.types"
+  cp conf/mime.types mime.types
+  git add mime.types
+  git commit -qm "feat: specify custom mime.types"
+
   echo "-----> Setting the buildpack to the current commit"
   echo "https://github.com/${GITHUB_REPOSITORY}.git#$GITHUB_SHA" > .buildpacks
   git add .buildpacks
-  git config --global user.name 'Dokku Bot'
-  git config --global user.email no-reply@dokku.com
   git commit -qm "feat: specify $GITHUB_SHA as buildpack"
 fi
