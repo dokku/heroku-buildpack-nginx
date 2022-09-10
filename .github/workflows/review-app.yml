@@ -26,18 +26,3 @@ jobs:
           # specify a name for the review app
           review_app_name: nginx-buildpack-${{ github.event.pull_request.number }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-  destroy_review_app:
-    runs-on: ubuntu-latest
-    # only run when a pull request is closed
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    steps:
-      - name: Destroy the review app
-        uses: dokku/github-action@master
-        with:
-          # destroy a review app
-          command: review-apps:destroy
-          git_remote_url: 'ssh://dokku@dokku.me:22/nginx-buildpack'
-          # specify a name for the review app
-          review_app_name: nginx-buildpack-${{ github.event.pull_request.number }}
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
