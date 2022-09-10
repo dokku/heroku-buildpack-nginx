@@ -1,5 +1,5 @@
 ---
-name: 'deploy'
+name: 'review-app'
 
 # yamllint disable-line rule:truthy
 on:
