@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
-set -eo pipefail; [[ $TRACE ]] && set -x
+set -eo pipefail
+[[ $TRACE ]] && set -x
 
 NGINX_VERSION="1.17.0"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
@@ -12,14 +13,16 @@ ZLIB_VERSION="1.2.11"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
 suppress() {
+  /bin/rm --force /tmp/surpress.out 2>/dev/null
   # shellcheck disable=SC2069
-  /bin/rm --force /tmp/surpress.out 2> /dev/null; "$@" 2>&1 > /tmp/surpress.out || cat /tmp/surpress.out; /bin/rm /tmp/surpress.out;
+  "$@" 2>&1 >/tmp/surpress.out || cat /tmp/surpress.out
+  /bin/rm /tmp/surpress.out
 }
 
 # parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
-CUR_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
+CUR_DIR=$(cd "$(dirname "$0")" && cd .. && pwd)
 
 mkdir -p "$BUILD_DIR" "$CACHE_DIR"
 
@@ -130,19 +133,19 @@ fi
 
 # Update the PATH
 mkdir -p "$BUILD_DIR/.profile.d"
-cat > "$BUILD_DIR/.profile.d/nginx.sh" <<"EOF"
+cat >"$BUILD_DIR/.profile.d/nginx.sh" <<"EOF"
 export PATH="$PATH:$HOME/nginx"
 EOF
 
 cd "$CUR_DIR"
 
 # Add support for app-nginx.conf.sigil
-if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ] ; then
+if [ -f "$BUILD_DIR/app-nginx.conf.sigil" ]; then
   echo "-----> Using user provided app-nginx.conf.sigil"
   cp "$BUILD_DIR/app-nginx.conf.sigil" "$BUILD_DIR/nginx/app-nginx.conf.sigil"
 
 # Allow deprecated nginx.conf.erb
-elif [ -f "$BUILD_DIR/nginx.conf.erb" ] ; then
+elif [ -f "$BUILD_DIR/nginx.conf.erb" ]; then
   echo "-----> DEPRECATED: Using user provided nginx.conf.erb"
   cp "$BUILD_DIR/nginx.conf.erb" "$BUILD_DIR/nginx/nginx.conf.erb"
 
@@ -153,7 +156,7 @@ else
 fi
 
 # build mime.types unless overridden by user
-if [ -f "$BUILD_DIR/mime.types" ] ; then
+if [ -f "$BUILD_DIR/mime.types" ]; then
   echo "-----> Using user provided mime.types"
   cp "$BUILD_DIR/mime.types" "$BUILD_DIR/nginx/mime.types"
 
