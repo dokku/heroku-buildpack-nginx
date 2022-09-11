@@ -71,6 +71,7 @@ if [[ ! -f "sigil" ]]; then
   echo "-----> Download and unzip sigil ${SIGIL_VERSION} via http"
   curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz" -o "${SIGIL_TARBALL}"
   tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
+  ls -lah .
 fi
 
 mkdir -p "$BUILD_DIR/sigil"
