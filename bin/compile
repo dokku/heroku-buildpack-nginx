@@ -84,7 +84,7 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
   suppress ./configure \
     --with-cpu-opt=generic \
     --prefix="$BUILD_DIR/nginx" \
-    --with-pcre=../pcre-${PCRE_VERSION} \
+    --with-pcre=../pcre2-${PCRE_VERSION} \
     --sbin-path=. \
     --pid-path=./nginx.pid \
     --conf-path=./nginx.conf \
