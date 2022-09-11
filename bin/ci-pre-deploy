@@ -19,8 +19,8 @@ if [ "$IS_REVIEW_APP" = "true" ]; then
   git add mime.types
   git commit -qm "feat: specify custom mime.types"
 
-  echo "-----> Setting the buildpack to the current commit"
-  echo "https://github.com/${GITHUB_REPOSITORY}.git#$GITHUB_SHA" > .buildpacks
+  echo "-----> Setting the buildpack to the current ref $GITHUB_REF_NAME"
+  echo "https://github.com/${GITHUB_REPOSITORY}.git#$GITHUB_REF_NAME" > .buildpacks
   git add .buildpacks
   git commit -qm "feat: specify $GITHUB_SHA as buildpack"
 
