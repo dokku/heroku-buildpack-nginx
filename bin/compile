@@ -7,8 +7,8 @@ NGINX_VERSION="1.17.0"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
 PCRE_VERSION="8.45"
 PCRE_TARBALL="pcre-${PCRE_VERSION}.tar.gz"
-SIGIL_VERSION="0.4.0"
-SIGIL_TARBALL="sigil_${SIGIL_VERSION}_Linux_x86_64.tgz"
+SIGIL_VERSION="0.9.0"
+SIGIL_TARBALL="gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz"
 ZLIB_VERSION="1.2.12"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
 
@@ -69,7 +69,7 @@ fi
 
 if [[ ! -f "sigil" ]]; then
   echo "-----> Download and unzip sigil ${SIGIL_VERSION} via http"
-  curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/${SIGIL_TARBALL}" -o "${SIGIL_TARBALL}"
+  curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz" -o "${SIGIL_TARBALL}"
   tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
 fi
 
