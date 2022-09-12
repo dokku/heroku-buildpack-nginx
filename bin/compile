@@ -67,13 +67,17 @@ if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
   tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
 fi
 
-if [[ ! -f "sigil" ]]; then
+if [[ ! -f "gliderlabs-sigil-amd64" ]]; then
   echo "-----> Download and unzip sigil ${SIGIL_VERSION} via http"
   curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz" -o "${SIGIL_TARBALL}"
   tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
 fi
 
 mkdir -p "$BUILD_DIR/sigil"
+if [[ ! -f "gliderlabs-sigil-amd64" ]]; then
+  echo " !     Missing gliderlabs-sigil-amd64 binary"
+  exit 1
+fi
 cp -r gliderlabs-sigil-amd64 "$BUILD_DIR/sigil/sigil"
 
 cd "nginx-${NGINX_VERSION}"
