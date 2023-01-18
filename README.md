@@ -39,7 +39,7 @@ By default, this buildpack will 404 if a requested file is not found. For static
 ```shell
 # where the app is named `static-app`
 # and the desired default response is index.html
-dokku config:set static-app NGINX_ROOT=index.html
+dokku config:set static-app NGINX_DEFAULT_REQUEST=index.html
 ```
 
 ### Custom nginx config file
