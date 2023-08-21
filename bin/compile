@@ -5,7 +5,7 @@ set -eo pipefail
 
 NGINX_VERSION="1.23.1"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="10.40"
+PCRE_VERSION="10.42"
 PCRE_TARBALL="pcre2-${PCRE_VERSION}.tar.gz"
 SIGIL_VERSION="0.10.1"
 SIGIL_TARBALL="gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz"
