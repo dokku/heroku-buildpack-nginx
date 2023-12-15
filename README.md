@@ -46,6 +46,10 @@ dokku config:set static-app NGINX_DEFAULT_REQUEST=index.html
 
 You may completely override the built-in nginx config by placing an `app-nginx.conf.sigil` file in the root, modeled after our own [`conf/app-nginx.conf.sigil`](https://github.com/dokku/buildpack-nginx/blob/master/conf/app-nginx.conf.sigil). This will be used inside of the container, and not by the host Dokku instance. See the [sigil project](https://github.com/gliderlabs/sigil) for more information concerning the sigil format.
 
+### Custom MIME types
+
+Files will be served with a `Content-Type` according to a list of supported MIME types at [`conf/mime.types`](https://github.com/dokku/heroku-buildpack-nginx/blob/master/conf/mime.types). If you need to serve files of a MIME type not included in the list, you can provide your own `mime.types` file in the root.
+
 ## Credits and License
 
 `buildpack-nginx` is licensed under the CC0 1.0 Universal license and has been informed by many similar projects on the web.
