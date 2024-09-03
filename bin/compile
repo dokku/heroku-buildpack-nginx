@@ -3,7 +3,7 @@
 set -eo pipefail
 [[ $TRACE ]] && set -x
 
-NGINX_VERSION="1.25.2"
+NGINX_VERSION="1.26.2"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
 PCRE_VERSION="10.42"
 PCRE_TARBALL="pcre2-${PCRE_VERSION}.tar.gz"
@@ -51,7 +51,7 @@ cd "$CACHE_DIR"
 
 if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
   echo "-----> Download and unzip nginx ${NGINX_VERSION} via http"
-  curl -sSL "http://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
+  curl -sSL "https://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
   tar xzf "${NGINX_TARBALL}" && rm -f "${NGINX_TARBALL}"
 fi
 
