@@ -1,19 +1,38 @@
-worker_processes 1;
+{{ if ne $.NGINX_WORKERS "" }}
+  worker_processes {{ $.NGINX_WORKERS }};
+{{ else }}
+  worker_processes 1;
+{{ end }}
 error_log stderr;
 pid nginx.pid;
 daemon off;
 
 events {
-  worker_connections 768;
+  {{ if ne $.NGINX_WORKER_CONNECTIONS "" }}
+    worker_connections {{ $.NGINX_WORKER_CONNECTIONS }};
+  {{ else }}
+    worker_connections 768;
+  {{ end }}
 }
 
 http {
+  {{ if ne $.NGINX_CLIENT_BODY_TIMEOUT "" }}
+    client_body_timeout {{ $.NGINX_CLIENT_BODY_TIMEOUT }};
+  {{ else }}
+    client_body_timeout 5;
+  {{ end }}
   types_hash_max_size 2048;
   include mime.types;
   charset UTF-8;
+
   server {
     listen {{ $.PORT }};
     server_name  _;
+    {{ if ne $.NGINX_CLIENT_MAX_BODY_SIZE "" }}
+      client_max_body_size {{ $.NGINX_CLIENT_MAX_BODY_SIZE }}M;
+    {{ else }}
+      client_max_body_size 1M;
+    {{ end }}
     {{ if ne $.NGINX_ROOT "" }}
       root /app/www/{{ $.NGINX_ROOT }};
     {{ else }}
