@@ -11,7 +11,6 @@ PCRE_VERSION="10.47"
 PCRE_TARBALL="pcre2-${PCRE_VERSION}.tar.gz"
 # https://github.com/gliderlabs/sigil/releases
 SIGIL_VERSION="0.11.5"
-SIGIL_TARBALL="gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz"
 # https://github.com/madler/zlib/releases
 ZLIB_VERSION="1.3.1"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
@@ -71,18 +70,18 @@ if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
   tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
 fi
 
-if [[ ! -f "gliderlabs-sigil-amd64" ]]; then
+mkdir -p "$BUILD_DIR/sigil"
+if [[ ! -f "$BUILD_DIR/sigil/sigil-${SIGIL_VERSION}" ]]; then
   echo "-----> Download and unzip sigil ${SIGIL_VERSION} via http"
-  curl -sSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz" -o "${SIGIL_TARBALL}"
-  tar xzf "${SIGIL_TARBALL}" && rm -rf "${SIGIL_TARBALL}"
+  curl -fsSL "https://github.com/gliderlabs/sigil/releases/download/v${SIGIL_VERSION}/sigil-linux-amd64" -o "$BUILD_DIR/sigil/sigil-${SIGIL_VERSION}"
+  cp "$BUILD_DIR/sigil/sigil-${SIGIL_VERSION}" "$BUILD_DIR/sigil/sigil"
+  chmod +x "$BUILD_DIR/sigil/sigil"
 fi
 
-mkdir -p "$BUILD_DIR/sigil"
-if [[ ! -f "gliderlabs-sigil-amd64" ]]; then
-  echo " !     Missing gliderlabs-sigil-amd64 binary"
+if [[ ! -f "$BUILD_DIR/sigil/sigil" ]]; then
+  echo " !     Missing sigil binary"
   exit 1
 fi
-cp -r gliderlabs-sigil-amd64 "$BUILD_DIR/sigil/sigil"
 
 cd "nginx-${NGINX_VERSION}"
 if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
