@@ -24,6 +24,7 @@ http {
   types_hash_max_size 2048;
   include mime.types;
   charset UTF-8;
+  access_log stdout;
 
   server {
     listen {{ $.PORT }};
