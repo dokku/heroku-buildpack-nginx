@@ -6,7 +6,8 @@ set -eo pipefail
 # https://nginx.org/en/download.html
 NGINX_VERSION="1.29.3"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
-PCRE_VERSION="10.42"
+# https://github.com/PCRE2Project/pcre2/releases
+PCRE_VERSION="10.47"
 PCRE_TARBALL="pcre2-${PCRE_VERSION}.tar.gz"
 SIGIL_VERSION="0.10.1"
 SIGIL_TARBALL="gliderlabs-sigil_${SIGIL_VERSION}_linux_amd64.tgz"
