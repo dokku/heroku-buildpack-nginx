@@ -12,6 +12,9 @@ jobs:
   destroy_review_app:
     runs-on: ubuntu-latest
     steps:
+      - name: Cloning repo
+        uses: actions/checkout@v6
+
       - name: Destroy the review app
         uses: dokku/github-action@master
         with:
