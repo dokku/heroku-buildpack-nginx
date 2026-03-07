@@ -1,4 +1,3 @@
 #!/bin/sh -l
 
 echo "Running ci-post-review-app-destroy"
-env
