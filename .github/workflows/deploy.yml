@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  review_app:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Cloning repo
