@@ -4,7 +4,7 @@ set -eo pipefail
 [[ $TRACE ]] && set -x
 
 # https://nginx.org/en/download.html
-NGINX_VERSION="1.29.3"
+NGINX_VERSION="1.29.5"
 NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
 # https://github.com/PCRE2Project/pcre2/releases
 PCRE_VERSION="10.47"
