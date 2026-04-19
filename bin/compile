@@ -14,6 +14,7 @@ SIGIL_VERSION="0.11.5"
 # https://github.com/madler/zlib/releases
 ZLIB_VERSION="1.3.2"
 ZLIB_TARBALL="zlib-${ZLIB_VERSION}.tar.gz"
+BUILDPACK_REPO="dokku/heroku-buildpack-nginx"
 
 suppress() {
   /bin/rm --force /tmp/surpress.out 2>/dev/null
@@ -52,24 +53,6 @@ fi
 
 cd "$CACHE_DIR"
 
-if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
-  echo "-----> Download and unzip nginx ${NGINX_VERSION} via http"
-  curl -sSL "https://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
-  tar xzf "${NGINX_TARBALL}" && rm -f "${NGINX_TARBALL}"
-fi
-
-if [[ ! -d "${PCRE_TARBALL%.tar.gz}" ]]; then
-  echo "-----> Download and unzip pcre ${PCRE_VERSION} via http"
-  curl -sSL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${PCRE_VERSION}/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
-  tar xzf "${PCRE_TARBALL}" && rm -f "${PCRE_TARBALL}"
-fi
-
-if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
-  echo "-----> Download and unzip zlib ${ZLIB_VERSION} via http"
-  curl -sSL "https://github.com/madler/zlib/archive/v${ZLIB_VERSION}.tar.gz" -o "${ZLIB_TARBALL}"
-  tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
-fi
-
 mkdir -p "$BUILD_DIR/sigil"
 if [[ ! -f "$BUILD_DIR/sigil/sigil-${SIGIL_VERSION}" ]]; then
   echo "-----> Download and unzip sigil ${SIGIL_VERSION} via http"
@@ -83,8 +66,40 @@ if [[ ! -f "$BUILD_DIR/sigil/sigil" ]]; then
   exit 1
 fi
 
-cd "nginx-${NGINX_VERSION}"
-if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
+if [[ -f "${CACHE_DIR}/bin/nginx" ]]; then
+  echo "-----> Reusing nginx binary from cache"
+  mkdir -p "$BUILD_DIR/nginx"
+  # shellcheck disable=SC2086
+  cp -r $CACHE_DIR/bin/* "$BUILD_DIR/nginx/"
+
+elif curl -fsSL "https://github.com/${BUILDPACK_REPO}/releases/latest/download/nginx-linux-amd64" -o /tmp/nginx-linux-amd64 2>/dev/null; then
+  echo "-----> Using precompiled nginx binary"
+  mkdir -p "$BUILD_DIR/nginx" "${CACHE_DIR}/bin"
+  chmod +x /tmp/nginx-linux-amd64
+  cp /tmp/nginx-linux-amd64 "$BUILD_DIR/nginx/nginx"
+  cp /tmp/nginx-linux-amd64 "${CACHE_DIR}/bin/nginx"
+  rm -f /tmp/nginx-linux-amd64
+
+else
+  if [[ ! -d "${NGINX_TARBALL%.tar.gz}" ]]; then
+    echo "-----> Download and unzip nginx ${NGINX_VERSION} via http"
+    curl -sSL "https://nginx.org/download/${NGINX_TARBALL}" -o "${NGINX_TARBALL}"
+    tar xzf "${NGINX_TARBALL}" && rm -f "${NGINX_TARBALL}"
+  fi
+
+  if [[ ! -d "${PCRE_TARBALL%.tar.gz}" ]]; then
+    echo "-----> Download and unzip pcre ${PCRE_VERSION} via http"
+    curl -sSL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${PCRE_VERSION}/${PCRE_TARBALL}" -o "${PCRE_TARBALL}"
+    tar xzf "${PCRE_TARBALL}" && rm -f "${PCRE_TARBALL}"
+  fi
+
+  if [[ ! -d "${ZLIB_TARBALL%.tar.gz}" ]]; then
+    echo "-----> Download and unzip zlib ${ZLIB_VERSION} via http"
+    curl -sSL "https://github.com/madler/zlib/archive/v${ZLIB_VERSION}.tar.gz" -o "${ZLIB_TARBALL}"
+    tar xzf "${ZLIB_TARBALL}" && rm -rf "${ZLIB_TARBALL}"
+  fi
+
+  cd "nginx-${NGINX_VERSION}"
   echo "-----> Compiling static nginx binary"
   mkdir "$BUILD_DIR/nginx"
   suppress ./configure \
@@ -130,12 +145,6 @@ if [[ ! -f "${CACHE_DIR}/bin/nginx" ]]; then
   rm -rf "${CACHE_DIR:?}/bin" && mkdir -p "$CACHE_DIR/bin/"
   # shellcheck disable=SC2086
   cp -r $BUILD_DIR/nginx/* "$CACHE_DIR/bin/"
-
-else
-  echo "-----> Reusing nginx binary from cache"
-  mkdir -p "$BUILD_DIR/nginx"
-  # shellcheck disable=SC2086
-  cp -r $CACHE_DIR/bin/* "$BUILD_DIR/nginx/"
 fi
 
 # Update the PATH
