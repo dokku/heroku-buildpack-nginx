@@ -123,6 +123,9 @@ else
   echo "$NGINX_VERSION" >"${CACHE_DIR}/bin/.nginx-version"
 fi
 
+# Create logs directory for nginx's compiled-in default log paths
+mkdir -p "$BUILD_DIR/nginx/logs"
+
 # Update the PATH
 mkdir -p "$BUILD_DIR/.profile.d"
 cat >"$BUILD_DIR/.profile.d/nginx.sh" <<"EOF"
