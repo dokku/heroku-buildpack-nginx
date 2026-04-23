@@ -25,4 +25,7 @@ if [ "$IS_REVIEW_APP" = "true" ]; then
   git commit -qm "feat: specify $GITHUB_SHA as buildpack"
 
   git rev-parse HEAD >ci-commit-override
+else
+  echo "-----> Setting the buildpack to the current ref $GITHUB_REF_NAME"
+  ssh "$SSH_REMOTE" -- buildpacks:set "$APP_NAME" "https://github.com/${GITHUB_REPOSITORY}.git#${GITHUB_REF_NAME}"
 fi
