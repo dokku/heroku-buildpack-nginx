@@ -11,9 +11,12 @@ on:
     branches:
       - master
       - main
+  release:
+    types: [created]
 
 jobs:
   lint:
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -52,3 +55,14 @@ jobs:
         run: |
           source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
           /tmp/nginx-${NGINX_VERSION}/objs/nginx -V
+
+      - name: Upload release assets
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          cp /tmp/nginx-${NGINX_VERSION}/objs/nginx /tmp/nginx-linux-amd64
+          chmod +x /tmp/nginx-linux-amd64
+          gh release upload "${{ github.event.release.tag_name }}" \
+            /tmp/nginx-linux-amd64
