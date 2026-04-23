@@ -50,4 +50,5 @@ jobs:
 
       - name: Verify nginx binary
         run: |
-          /tmp/nginx-build/nginx -V
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          /tmp/nginx-${NGINX_VERSION}/objs/nginx -V
