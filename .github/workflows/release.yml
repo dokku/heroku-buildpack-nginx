@@ -13,61 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Extract version variables
-        id: versions
-        run: |
-          NGINX_VERSION=$(grep '^NGINX_VERSION=' bin/compile | cut -d'"' -f2)
-          PCRE_VERSION=$(grep '^PCRE_VERSION=' bin/compile | cut -d'"' -f2)
-          ZLIB_VERSION=$(grep '^ZLIB_VERSION=' bin/compile | cut -d'"' -f2)
-          echo "NGINX_VERSION=$NGINX_VERSION" >> "$GITHUB_OUTPUT"
-          echo "PCRE_VERSION=$PCRE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "ZLIB_VERSION=$ZLIB_VERSION" >> "$GITHUB_OUTPUT"
-
       - name: Download source tarballs
         run: |
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
           cd /tmp
-          curl -sSL "https://nginx.org/download/nginx-${{ steps.versions.outputs.NGINX_VERSION }}.tar.gz" | tar xz
-          curl -sSL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${{ steps.versions.outputs.PCRE_VERSION }}/pcre2-${{ steps.versions.outputs.PCRE_VERSION }}.tar.gz" | tar xz
-          curl -sSL "https://github.com/madler/zlib/archive/v${{ steps.versions.outputs.ZLIB_VERSION }}.tar.gz" | tar xz
+          curl -sSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" | tar xz
+          curl -sSL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${PCRE_VERSION}/pcre2-${PCRE_VERSION}.tar.gz" | tar xz
+          curl -sSL "https://github.com/madler/zlib/archive/v${ZLIB_VERSION}.tar.gz" | tar xz
 
       - name: Compile nginx
         run: |
-          cd /tmp/nginx-${{ steps.versions.outputs.NGINX_VERSION }}
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          cd /tmp/nginx-${NGINX_VERSION}
           ./configure \
-            --with-cpu-opt=generic \
             --prefix=/tmp/nginx-build \
-            --with-pcre=../pcre2-${{ steps.versions.outputs.PCRE_VERSION }} \
-            --sbin-path=. \
-            --pid-path=./nginx.pid \
-            --conf-path=./nginx.conf \
-            --with-ld-opt="-static" \
-            --with-http_stub_status_module \
-            --with-http_gzip_static_module \
-            --with-file-aio \
-            --with-zlib=../zlib-${{ steps.versions.outputs.ZLIB_VERSION }} \
-            --with-pcre \
-            --with-cc-opt="-O2 -static -static-libgcc" \
-            --without-http_ssi_module \
-            --without-http_userid_module \
-            --without-http_access_module \
-            --without-http_autoindex_module \
-            --without-http_geo_module \
-            --without-http_map_module \
-            --without-http_split_clients_module \
-            --without-http_referer_module \
-            --without-http_fastcgi_module \
-            --without-http_uwsgi_module \
-            --without-http_scgi_module \
-            --without-http_memcached_module \
-            --without-http_empty_gif_module \
-            --without-http_browser_module \
-            --without-http_upstream_ip_hash_module \
-            --without-http_upstream_least_conn_module \
-            --without-http_upstream_keepalive_module \
-            --without-mail_pop3_module \
-            --without-mail_imap_module \
-            --without-mail_smtp_module \
-            --with-http_realip_module
+            --with-pcre=../pcre2-${PCRE_VERSION} \
+            --with-zlib=../zlib-${ZLIB_VERSION} \
+            "${NGINX_CONFIGURE_FLAGS[@]}"
           sed -i "/CFLAGS/s/ \-O //g" objs/Makefile
           make -j"$(nproc)"
           cp objs/nginx /tmp/nginx-linux-amd64
