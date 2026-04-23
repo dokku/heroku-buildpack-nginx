@@ -1,0 +1,43 @@
+---
+name: "release"
+
+# yamllint disable-line rule:truthy
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download source tarballs
+        run: |
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          cd /tmp
+          curl -sSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" | tar xz
+          curl -sSL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${PCRE_VERSION}/pcre2-${PCRE_VERSION}.tar.gz" | tar xz
+          curl -sSL "https://github.com/madler/zlib/archive/v${ZLIB_VERSION}.tar.gz" | tar xz
+
+      - name: Compile nginx
+        run: |
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          cd /tmp/nginx-${NGINX_VERSION}
+          ./configure \
+            --prefix=/tmp/nginx-build \
+            --with-pcre=../pcre2-${PCRE_VERSION} \
+            --with-zlib=../zlib-${ZLIB_VERSION} \
+            "${NGINX_CONFIGURE_FLAGS[@]}"
+          sed -i "/CFLAGS/s/ \-O //g" objs/Makefile
+          make -j"$(nproc)"
+          cp objs/nginx /tmp/nginx-linux-amd64
+          chmod +x /tmp/nginx-linux-amd64
+
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            /tmp/nginx-linux-amd64
