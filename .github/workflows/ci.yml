@@ -1,13 +1,31 @@
 ---
-name: "release"
+name: "ci"
 
 # yamllint disable-line rule:truthy
 on:
+  pull_request:
+    branches:
+      - master
+      - main
+  push:
+    branches:
+      - master
+      - main
   release:
     types: [created]
 
 jobs:
-  build-assets:
+  lint:
+    if: github.event_name != 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run shellcheck
+        run: make test
+
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,12 +50,19 @@ jobs:
             "${NGINX_CONFIGURE_FLAGS[@]}"
           sed -i "/CFLAGS/s/ \-O //g" objs/Makefile
           make -j"$(nproc)"
-          cp objs/nginx /tmp/nginx-linux-amd64
-          chmod +x /tmp/nginx-linux-amd64
+
+      - name: Verify nginx binary
+        run: |
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          /tmp/nginx-${NGINX_VERSION}/objs/nginx -V
 
       - name: Upload release assets
+        if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
+          cp /tmp/nginx-${NGINX_VERSION}/objs/nginx /tmp/nginx-linux-amd64
+          chmod +x /tmp/nginx-linux-amd64
           gh release upload "${{ github.event.release.tag_name }}" \
             /tmp/nginx-linux-amd64
