@@ -62,7 +62,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           source "$GITHUB_WORKSPACE/conf/nginx-configure-flags"
-          cp /tmp/nginx-${NGINX_VERSION}/objs/nginx /tmp/nginx-linux-amd64
-          chmod +x /tmp/nginx-linux-amd64
+          cp /tmp/nginx-${NGINX_VERSION}/objs/nginx "/tmp/nginx-${NGINX_VERSION}-linux-amd64"
+          chmod +x "/tmp/nginx-${NGINX_VERSION}-linux-amd64"
           gh release upload "${{ github.event.release.tag_name }}" \
-            /tmp/nginx-linux-amd64
+            "/tmp/nginx-${NGINX_VERSION}-linux-amd64"

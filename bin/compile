@@ -60,18 +60,29 @@ if [[ ! -f "$BUILD_DIR/sigil/sigil" ]]; then
   exit 1
 fi
 
+# Invalidate cache if version doesn't match
+if [[ -f "${CACHE_DIR}/bin/nginx" ]] && [[ ! -f "${CACHE_DIR}/bin/.nginx-version" ]]; then
+  echo "-----> Cached nginx binary has no version marker, rebuilding"
+  rm -rf "${CACHE_DIR:?}/bin"
+elif [[ -f "${CACHE_DIR}/bin/nginx" ]] && [[ -f "${CACHE_DIR}/bin/.nginx-version" ]] && [[ "$(cat "${CACHE_DIR}/bin/.nginx-version")" != "$NGINX_VERSION" ]]; then
+  CACHED_VERSION="$(cat "${CACHE_DIR}/bin/.nginx-version")"
+  echo "-----> Cached nginx ${CACHED_VERSION} does not match required ${NGINX_VERSION}, rebuilding"
+  rm -rf "${CACHE_DIR:?}/bin"
+fi
+
 if [[ -f "${CACHE_DIR}/bin/nginx" ]]; then
-  echo "-----> Reusing nginx binary from cache"
+  echo "-----> Reusing nginx ${NGINX_VERSION} binary from cache"
   mkdir -p "$BUILD_DIR/nginx"
   # shellcheck disable=SC2086
   cp -r $CACHE_DIR/bin/* "$BUILD_DIR/nginx/"
 
-elif curl -fsSL "https://github.com/${BUILDPACK_REPO}/releases/latest/download/nginx-linux-amd64" -o /tmp/nginx-linux-amd64 2>/dev/null; then
-  echo "-----> Using precompiled nginx binary"
+elif curl -fsSL "https://github.com/${BUILDPACK_REPO}/releases/latest/download/nginx-${NGINX_VERSION}-linux-amd64" -o /tmp/nginx-linux-amd64 2>/dev/null; then
+  echo "-----> Using precompiled nginx ${NGINX_VERSION} binary"
   mkdir -p "$BUILD_DIR/nginx" "${CACHE_DIR}/bin"
   chmod +x /tmp/nginx-linux-amd64
   cp /tmp/nginx-linux-amd64 "$BUILD_DIR/nginx/nginx"
   cp /tmp/nginx-linux-amd64 "${CACHE_DIR}/bin/nginx"
+  echo "$NGINX_VERSION" >"${CACHE_DIR}/bin/.nginx-version"
   rm -f /tmp/nginx-linux-amd64
 
 else
@@ -109,6 +120,7 @@ else
   rm -rf "${CACHE_DIR:?}/bin" && mkdir -p "$CACHE_DIR/bin/"
   # shellcheck disable=SC2086
   cp -r $BUILD_DIR/nginx/* "$CACHE_DIR/bin/"
+  echo "$NGINX_VERSION" >"${CACHE_DIR}/bin/.nginx-version"
 fi
 
 # Update the PATH
