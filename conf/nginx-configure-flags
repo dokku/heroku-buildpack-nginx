@@ -4,13 +4,13 @@
 # shellcheck disable=SC2034
 
 # https://nginx.org/en/download.html
-NGINX_VERSION="1.29.8"
+NGINX_VERSION="1.30.8"
 # https://github.com/PCRE2Project/pcre2/releases
-PCRE_VERSION="10.47"
+PCRE_VERSION="10.49"
 # https://github.com/gliderlabs/sigil/releases
-SIGIL_VERSION="0.11.5"
+SIGIL_VERSION="0.12.1"
 # https://github.com/madler/zlib/releases
-ZLIB_VERSION="1.3.2"
+ZLIB_VERSION="1.4"
 
 NGINX_CONFIGURE_FLAGS=(
   --with-cpu-opt=generic
